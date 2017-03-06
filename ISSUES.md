@@ -10,4 +10,4 @@ __Fuctionality:__
 
 __i18n:__
 * egqypt release in arabic
-* RTL
+* RTL works everywhere except pop screen to add a stock

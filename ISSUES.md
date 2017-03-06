@@ -9,5 +9,5 @@ __Fuctionality:__
 * Blank screen when first opened with no cache data should show no network info
 
 __i18n:__
-* egqypt release in arabic
+* egypt release in arabic
 * RTL works everywhere except pop screen to add a stock

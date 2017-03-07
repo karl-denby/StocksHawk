@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -25,9 +26,16 @@ import com.udacity.stockhawk.data.Contract;
 import com.udacity.stockhawk.data.PrefUtils;
 import com.udacity.stockhawk.sync.QuoteSyncJob;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
+import yahoofinance.Stock;
+import yahoofinance.YahooFinance;
+import yahoofinance.quotes.stock.StockQuote;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,
         SwipeRefreshLayout.OnRefreshListener,
@@ -130,8 +138,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show();
             }
 
-            PrefUtils.addStock(this, symbol);
-            QuoteSyncJob.syncImmediately(this);
+            // Check symbol is a valid stock, then add to prefs and sync the data
+            //  maybe do an async task to pull this stock, if the name comes back as null then
+            //  its not recognized by yahoo finance
+            // If its not valid then we have to bail out and maybe show an error
+            new StockCheckAsyncTask().execute(symbol);
+
         }
     }
 
@@ -190,4 +202,29 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private class StockCheckAsyncTask extends AsyncTask<String, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(String... symbol) {
+
+            Stock stock = null;
+
+            try {
+                stock = YahooFinance.get(symbol[0]);
+            } catch (IOException e) {
+                Log.v("INVALID STOCK", "INVALID STOCK");
+            }
+
+            if (stock.getQuote().getAsk() != null) {
+                PrefUtils.addStock(getBaseContext(), symbol[0]);
+                QuoteSyncJob.syncImmediately(getBaseContext());
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+    }
+
 }

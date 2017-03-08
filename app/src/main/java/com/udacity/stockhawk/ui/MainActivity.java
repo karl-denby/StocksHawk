@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @BindView(R.id.error)
     TextView error;
     private StockAdapter adapter;
+    Toast mToast;
 
     @Override
     public void onClick(String symbol) {
@@ -138,10 +139,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show();
             }
 
-            // Check symbol is a valid stock, then add to prefs and sync the data
-            //  maybe do an async task to pull this stock, if the name comes back as null then
-            //  its not recognized by yahoo finance
-            // If its not valid then we have to bail out and maybe show an error
             new StockCheckAsyncTask().execute(symbol);
 
         }
@@ -213,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             try {
                 stock = YahooFinance.get(symbol[0]);
             } catch (IOException e) {
-                Log.v("INVALID STOCK", "INVALID STOCK");
+                Log.v("CHECK VALID", "Network Error: Exception during Stock.get(symbol)");
             }
 
             if (stock.getQuote().getAsk() != null) {
@@ -222,6 +219,21 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 return true;
             } else {
                 return false;
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(Boolean valid) {
+            super.onPostExecute(valid);
+            if (!valid) {
+                swipeRefreshLayout.setRefreshing(false);
+
+                if (mToast!=null) {
+                    mToast.cancel();
+                }
+                mToast = Toast.makeText(getBaseContext(), "Unrecognized Stock", Toast.LENGTH_LONG);
+                mToast.show();
             }
         }
 

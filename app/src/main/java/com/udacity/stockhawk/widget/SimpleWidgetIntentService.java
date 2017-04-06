@@ -10,7 +10,7 @@ import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.udacity.stockhawk.R;
-import com.udacity.stockhawk.ui.MainActivity;
+import com.udacity.stockhawk.ui.PhoneActivity;
 
 public class SimpleWidgetIntentService extends IntentService {
 
@@ -34,7 +34,7 @@ public class SimpleWidgetIntentService extends IntentService {
             views.setTextViewText(R.id.widget_text, "passed");
             Log.v("KARL", "KARL" + views.toString());
 
-            Intent launchIntent = new Intent(this, MainActivity.class);
+            Intent launchIntent = new Intent(this, PhoneActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, launchIntent, 0);
             views.setOnClickPendingIntent(R.id.widget, pendingIntent);
 

@@ -28,9 +28,9 @@ public class SimpleWidgetProvider extends AppWidgetProvider {
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
         super.onReceive(context, intent);
         Log.v("KARL", "Receive started");
-        if (StockProvider.ACTION_DATA_UPDATED.equals(intent.getAction())) {
+        //if (StockProvider.ACTION_DATA_UPDATED.equals(intent.getAction())) {
             context.startService(new Intent(context, SimpleWidgetIntentService.class));
-        }
+        //}
     }
 
 }

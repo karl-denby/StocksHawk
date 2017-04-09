@@ -8,8 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.udacity.stockhawk.data.StockProvider;
-
 public class SimpleWidgetProvider extends AppWidgetProvider {
 
     @Override

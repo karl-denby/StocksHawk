@@ -23,6 +23,10 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ui.DetailActivity">
+
+        </activity>
+
         <!-- Simple Widget -->
         <receiver
             android:name=".widget.SimpleWidgetProvider"

@@ -8,9 +8,15 @@ import android.widget.TextView;
 
 import com.udacity.stockhawk.R;
 
+import java.io.IOException;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
+import yahoofinance.Stock;
+import yahoofinance.YahooFinance;
+import yahoofinance.histquotes.HistoricalQuote;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -31,7 +37,17 @@ public class DetailActivity extends AppCompatActivity {
 
         Timber.d("Detail activity for stock: %s created", symbol);
 
+        Stock stock = null;
+        List<HistoricalQuote> stockHistQuotes = null;
+        try {
+            stock = YahooFinance.get(symbol);
+            stockHistQuotes = stock.getHistory();
+        } catch (IOException e) {
+            Timber.d(e.toString());
+        }
+
         tvStockName.setText(symbol);
+        Timber.d(stockHistQuotes.toString());
     }
 
 }

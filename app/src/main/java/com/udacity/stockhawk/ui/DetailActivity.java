@@ -13,6 +13,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 import com.udacity.stockhawk.R;
 
 import java.io.IOException;
@@ -35,6 +38,10 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.pb_loading_indicator)
     ProgressBar pbLoadingIndicator;
 
+    @SuppressWarnings("WeakerAcess")
+    @BindView(R.id.grp_historical_data)
+    GraphView grpHistorical;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +54,14 @@ public class DetailActivity extends AppCompatActivity {
         new StockDetailsAsyncTask().execute(symbol);
 
         Timber.d("Detail activity for stock: %s created", symbol);
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
+                new DataPoint(0,1),
+                new DataPoint(1,5),
+                new DataPoint(2,3),
+                new DataPoint(3,6)
+        });
+        grpHistorical.addSeries(series);
+
     }
 
     private class StockDetailsAsyncTask extends AsyncTask<String, Void, String> {

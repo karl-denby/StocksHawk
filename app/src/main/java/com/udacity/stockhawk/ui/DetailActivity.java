@@ -1,17 +1,13 @@
 package com.udacity.stockhawk.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -51,23 +47,17 @@ public class DetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String symbol = intent.getStringExtra("symbol");
+        if (symbol == null) { symbol = "DFLT"; };
         new StockDetailsAsyncTask().execute(symbol);
 
         Timber.d("Detail activity for stock: %s created", symbol);
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
-                new DataPoint(0,1),
-                new DataPoint(1,5),
-                new DataPoint(2,3),
-                new DataPoint(3,6)
-        });
-        grpHistorical.addSeries(series);
-
+        tvStockName.setText(symbol);
     }
 
-    private class StockDetailsAsyncTask extends AsyncTask<String, Void, String> {
+    private class StockDetailsAsyncTask extends AsyncTask<String, Void, String[]> {
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected String[] doInBackground(String... strings) {
 
             Stock stock = null;
             List<HistoricalQuote> stockHistQuotes = null;
@@ -78,15 +68,24 @@ public class DetailActivity extends AppCompatActivity {
                 Timber.d(e.toString());
             }
 
-            return stockHistQuotes.toString();
+            String[] not_s = { "4.5", "6.7", "3.2", "6.8", "4.7", "4.1", "5.5" };
+            return not_s;
         }
 
         @Override
-        protected void onPostExecute(String s) {
+        protected void onPostExecute(String[] s) {
             super.onPostExecute(s);
-            tvStockName.setText(s);
+
             tvStockName.setVisibility(View.VISIBLE);
             pbLoadingIndicator.setVisibility(View.GONE);
+            LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {});
+
+            double counter = 0;
+            for (String price : s) {
+                series.appendData(new DataPoint(counter, Double.valueOf(price)), true, s.length - 2);
+                counter++;
+            }
+            grpHistorical.addSeries(series);
         }
-    }
+    } // StockDetailsAsyncTask
 }

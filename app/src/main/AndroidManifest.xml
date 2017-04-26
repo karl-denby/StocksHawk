@@ -32,10 +32,12 @@
             android:label="Simple Widget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
+                <action android:name="com.android.example.stockshawk.ACTION_DATA_UPDATED" />
+             </intent-filter>
             <meta-data android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info_simple" />
         </receiver>
+        <service android:name=".widget.SimpleWidgetIntentService" />
 
         <service
             android:name=".sync.QuoteIntentService"
@@ -44,7 +46,7 @@
         <provider
             android:name=".data.StockProvider"
             android:authorities="com.example.android.stockshawk"
-            android:exported="true" />
+            android:exported="false" />
 
         <service
             android:name=".sync.QuoteJobService"

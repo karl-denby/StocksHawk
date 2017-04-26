@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-
 public class StockProvider extends ContentProvider {
 
     private static final int QUOTE = 100;
@@ -26,7 +25,6 @@ public class StockProvider extends ContentProvider {
         matcher.addURI(Contract.AUTHORITY, Contract.PATH_QUOTE_WITH_SYMBOL, QUOTE_FOR_SYMBOL);
         return matcher;
     }
-
 
     @Override
     public boolean onCreate() {

@@ -6,6 +6,8 @@ import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import com.example.android.stockshawk.R;
+
 
 public class SimpleWidgetService extends RemoteViewsService {
     @Override
@@ -27,6 +29,8 @@ class ListViewRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactor
     @Override
     public void onCreate() {
         Log.v("DEBUG: ", "Hello from RemoteViewsFactory");
+        // Setup connections to data/cursors
+        // nothing heavy as we have 20 seconds before an ANR gets shown
     }
 
     @Override
@@ -36,7 +40,7 @@ class ListViewRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactor
 
     @Override
     public void onDataSetChanged() {
-
+        // Do heavy stuff here
     }
 
     @Override
@@ -66,7 +70,11 @@ class ListViewRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactor
 
     @Override
     public RemoteViews getViewAt(int position) {
-        return null;
+        RemoteViews remoteViews = new RemoteViews(mContext.getPackageName(), R.layout.list_item_quote);
+        remoteViews.setTextViewText(R.id.symbol,"TEST");
+        remoteViews.setTextViewText(R.id.price,"0");
+        remoteViews.setTextViewText(R.id.change,"0");
+        return remoteViews;
     }
 
 }

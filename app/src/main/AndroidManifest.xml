@@ -26,7 +26,7 @@
         <activity android:name=".ui.DetailActivity">
         </activity>
 
-        <!-- Simple Widget -->
+        <!-- Simple Widget Receiver -->
         <receiver
             android:name=".widget.SimpleWidgetProvider"
             android:label="Simple Widget">
@@ -38,12 +38,11 @@
             <meta-data android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info_simple" />
         </receiver>
+        <!-- Simple Widget Receiver -->
 
         <service android:name=".widget.SimpleWidgetIntentService"
             android:permission="android.permission.BIND_REMOTEVIEWS"
             android:exported="false" />
-
-        <!-- Simple Widget -->
 
         <service
             android:name=".sync.QuoteIntentService"

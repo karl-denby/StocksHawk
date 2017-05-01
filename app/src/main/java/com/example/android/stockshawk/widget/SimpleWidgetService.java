@@ -9,6 +9,7 @@ import android.widget.RemoteViewsService;
 import com.example.android.stockshawk.R;
 
 
+
 public class SimpleWidgetService extends RemoteViewsService {
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
@@ -20,6 +21,9 @@ class ListViewRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactor
 
     Context mContext;
     Intent mIntent;
+    String fakeQuote;
+    String fakePrice;
+    String fakeChange;
 
     ListViewRemoteViewsFactory(Context context, Intent intent) {
         mContext = context;
@@ -31,11 +35,14 @@ class ListViewRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactor
         Log.v("DEBUG: ", "Hello from RemoteViewsFactory");
         // Setup connections to data/cursors
         // nothing heavy as we have 20 seconds before an ANR gets shown
+        fakeQuote = "TEST";
+        fakePrice = "0.0";
+        fakeChange = "0.0";
     }
 
     @Override
     public int getViewTypeCount() {
-        return 0;
+        return 1;
     }
 
     @Override
@@ -45,7 +52,7 @@ class ListViewRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactor
 
     @Override
     public int getCount() {
-        return 0;
+        return 1;
     }
 
     @Override
@@ -59,21 +66,19 @@ class ListViewRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactor
     }
 
     @Override
-    public void onDestroy() {
-
-    }
+    public void onDestroy() {}
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return 1;
     }
 
     @Override
     public RemoteViews getViewAt(int position) {
         RemoteViews remoteViews = new RemoteViews(mContext.getPackageName(), R.layout.list_item_quote);
-        remoteViews.setTextViewText(R.id.symbol,"TEST");
-        remoteViews.setTextViewText(R.id.price,"0");
-        remoteViews.setTextViewText(R.id.change,"0");
+        remoteViews.setTextViewText(R.id.symbol,fakeQuote);
+        remoteViews.setTextViewText(R.id.price, fakePrice);
+        remoteViews.setTextViewText(R.id.change, fakeChange);
         return remoteViews;
     }
 

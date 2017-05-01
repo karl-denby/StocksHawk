@@ -28,21 +28,19 @@
 
         <!-- Simple Widget Receiver -->
         <receiver
-            android:name=".widget.SimpleWidgetProvider"
+            android:name="com.example.android.stockshawk.widget.SimpleWidgetProvider"
             android:label="Simple Widget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.android.example.stockshawk.ACTION_DATA_UPDATED" />
              </intent-filter>
 
             <meta-data android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info_simple" />
         </receiver>
-        <!-- Simple Widget Receiver -->
 
-        <service android:name=".widget.SimpleWidgetIntentService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"
-            android:exported="false" />
+        <service android:name=".widget.SimpleWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+        <!-- Simple Widget Service -->
 
         <service
             android:name=".sync.QuoteIntentService"

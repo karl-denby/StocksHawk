@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import timber.log.Timber;
 
+
 public class QuoteIntentService extends IntentService {
 
     public QuoteIntentService() {
@@ -16,4 +17,5 @@ public class QuoteIntentService extends IntentService {
         Timber.d("Intent handled");
         QuoteSyncJob.getQuotes(getApplicationContext());
     }
+
 }

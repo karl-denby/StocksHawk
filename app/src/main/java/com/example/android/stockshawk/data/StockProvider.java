@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+
 public class StockProvider extends ContentProvider {
 
     private static final int QUOTE = 100;
@@ -184,6 +185,6 @@ public class StockProvider extends ContentProvider {
             default:
                 return super.bulkInsert(uri, values);
         }
-
     }
+
 }

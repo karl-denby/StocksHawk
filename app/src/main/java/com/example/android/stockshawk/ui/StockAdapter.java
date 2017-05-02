@@ -1,6 +1,5 @@
 package com.example.android.stockshawk.ui;
 
-
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;

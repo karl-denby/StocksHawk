@@ -6,6 +6,7 @@ import android.content.Intent;
 
 import timber.log.Timber;
 
+
 public class QuoteJobService extends JobService {
 
     @Override

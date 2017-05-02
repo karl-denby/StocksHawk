@@ -40,18 +40,26 @@ public class SimpleWidgetProvider extends AppWidgetProvider {
             // Tell the AppWidgetManager to perform an update on the current app widget
             appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
         }
+        Log.v("DEBUG: ", "onUpdate");
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
         //context.startService(new Intent(context, SimpleWidgetService.class));
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, SimpleWidgetProvider.class));
+
+
+        Log.v("DEBUG: ", "onReceive");
         super.onReceive(context, intent);
     }
 
     @Override
     public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
         //context.startService(new Intent(context, SimpleWidgetService.class));
+        Log.v("DEBUG: ", "onAppWidgetOptionsChanged");
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_list_view);
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
     }
 

@@ -5,7 +5,7 @@ This is developed from the starter code for project 3 in Udacity's [Android Deve
 Nanodegree students are evaluated against the project [rubric](https://review.udacity.com/#!/rubrics/140/view)
 
 # Screenshots
-![Widget](https://github.com/karl-denby/StocksHawk/screenshots/widget_preview.png)
+![Widget](https://github.com/karl-denby/StocksHawk/raw/master/screenshots/widget_preview.png)
 
 # Learnings
 * Creating a widget that was linked to a content provider

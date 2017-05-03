@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -65,14 +66,17 @@ public class DetailActivity extends AppCompatActivity {
             Calendar from = Calendar.getInstance();
             Calendar to = Calendar.getInstance();
 
-            from.add(Calendar.YEAR, -1); // from 1 month
+            from.add(Calendar.MONTH, -1); // from 1 month
 
             Stock stock;
             List<HistoricalQuote> stockHistQuotes = null;
 
             try {
                 stock = YahooFinance.get("GOOG", true);
-                stockHistQuotes = stock.getHistory(from, to, Interval.WEEKLY);
+                stockHistQuotes = stock.getHistory(from, to, Interval.DAILY);
+                for (HistoricalQuote quote : stockHistQuotes) {
+                    Log.v("Quote: ", "close > " + quote.getClose().toString());
+                }
             } catch (IOException e) {
                 Timber.d(e.toString());
             }
@@ -90,12 +94,12 @@ public class DetailActivity extends AppCompatActivity {
             System.out.println(s.size());
 
             double counter = 0;
-            /*
-            for (String price : s) {
-                series.appendData(new DataPoint(counter, Double.valueOf(price)), true, 8);
+
+            for (HistoricalQuote price : s) {
+                //series.appendData(new DataPoint(price.getDate(), price.getClose(), true, 8);
                 counter++;
             }
-            */
+
             grpHistorical.addSeries(series);
         }
     } // StockDetailsAsyncTask

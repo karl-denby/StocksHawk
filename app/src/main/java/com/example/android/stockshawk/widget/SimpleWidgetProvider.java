@@ -32,11 +32,11 @@ public class SimpleWidgetProvider extends AppWidgetProvider {
 
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_simple);
             remoteViews.setRemoteAdapter(R.id.widget_list_view, intent);
-            remoteViews.setEmptyView(R.id.widget_list_view, R.id.no_data);
+            remoteViews.setEmptyView(R.id.widget_list_view, R.id.widget_no_data);
 
             // Get the layout for the App Widget and attach an on-click listener
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-            remoteViews.setOnClickPendingIntent(R.id.widget, pendingIntent);
+            remoteViews.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
 
             // Tell the AppWidgetManager to perform an update on the current app widget
             appWidgetManager.updateAppWidget(appWidgetId, remoteViews);

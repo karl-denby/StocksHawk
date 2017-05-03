@@ -1,11 +1,16 @@
-# Stock Hawk
+# StocksHawk
 
-This is the starter code for project 3 in Udacity's [Android Developer Nanodegree](https://www.udacity.com/course/android-developer-nanodegree-by-google--nd801). 
+This is developed from the starter code for project 3 in Udacity's [Android Developer Nanodegree](https://www.udacity.com/course/android-developer-nanodegree-by-google--nd801).
 
-Check out Udacity's [Advanced Android App Development](https://www.udacity.com/course/advanced-android-app-development--ud855) course to get the skills you'll need to complete this project!
+Nanodegree students are evaluated against the project [rubric](https://review.udacity.com/#!/rubrics/140/view)
 
-If you're a Nanodegree student check your work againt the project [rubric](https://review.udacity.com/#!/rubrics/140/view), then click [here](https://classroom.udacity.com/nanodegrees/nd801/parts/8011345406/project) to submit your project.
+# Screenshots
+![Widget](https://github.com/karl-denby/StocksHawk/tree/master/Screenshots/widget_preview.png)
 
-# Contrubuting
+# Learnings
+* Creating a widget that was linked to a content provider
+* Problems with upstream library/API (Yahoo Finance) can cause major issues downstream
+
+# Contributing
 
 Pull requests gratefully accepted.

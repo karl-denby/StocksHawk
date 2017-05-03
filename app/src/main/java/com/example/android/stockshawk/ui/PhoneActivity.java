@@ -212,7 +212,7 @@ public class PhoneActivity extends AppCompatActivity implements LoaderManager.Lo
             Stock stock = null;
 
             try {
-                stock = YahooFinance.get(symbol[0], true);
+                stock = YahooFinance.get(symbol[0], false);
             } catch (IOException e) {
                 Log.v("CHECK VALID", "Network Error: Exception during Stock.get(symbol)");
             }

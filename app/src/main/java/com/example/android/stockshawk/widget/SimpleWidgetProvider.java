@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -50,6 +51,9 @@ public class SimpleWidgetProvider extends AppWidgetProvider {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, SimpleWidgetProvider.class));
 
+        for (int widget : appWidgetIds) {
+            appWidgetManager.notifyAppWidgetViewDataChanged(widget, R.id.widget_list_view);
+        }
 
         Log.v("DEBUG: ", "onReceive");
         super.onReceive(context, intent);

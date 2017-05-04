@@ -55,11 +55,14 @@ public class PhoneActivity extends AppCompatActivity implements LoaderManager.Lo
     Toast mToast;
 
     @Override
-    public void onClick(String symbol) {
+    public void onClick(String symbol, String price, String change, String absolute) {
         Timber.d("Symbol clicked: %s", symbol);
 
         Intent intent = new Intent(PhoneActivity.this, DetailActivity.class);
         intent.putExtra("symbol", symbol);
+        intent.putExtra("price", price);
+        intent.putExtra("change", change);
+        intent.putExtra("absolute", absolute);
         startActivity(intent);
     }
 
@@ -133,18 +136,13 @@ public class PhoneActivity extends AppCompatActivity implements LoaderManager.Lo
 
     void addStock(String symbol) {
         if (symbol != null && !symbol.isEmpty()) {
-
-            Log.v(TAG, "Symbol is " + symbol);
-
             if (networkUp()) {
                 swipeRefreshLayout.setRefreshing(true);
             } else {
                 String message = getString(R.string.toast_stock_added_no_connectivity, symbol);
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show();
             }
-
             new StockCheckAsyncTask().execute(symbol);
-
         }
     }
 

@@ -35,6 +35,18 @@ public class DetailActivity extends AppCompatActivity {
     TextView tvStockName;
 
     @SuppressWarnings("WeakerAccess")
+    @BindView(R.id.tv_detail_price)
+    TextView tvStockPrice;
+
+    @SuppressWarnings("WeakerAccess")
+    @BindView(R.id.tv_detail_change)
+    TextView tvStockChange;
+
+    @SuppressWarnings("WeakerAccess")
+    @BindView(R.id.tv_detail_percent)
+    TextView tvStockPercent;
+
+    @SuppressWarnings("WeakerAccess")
     @BindView(R.id.pb_loading_indicator)
     ProgressBar pbLoadingIndicator;
 
@@ -51,11 +63,18 @@ public class DetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String symbol = intent.getStringExtra("symbol");
+        String price = intent.getStringExtra("price");
+        String change = intent.getStringExtra("change");
+        String absolute = intent.getStringExtra("absolute");
+
         if (symbol == null) { symbol = "DFLT"; }
         new StockDetailsAsyncTask().execute(symbol);
 
         Timber.d("Detail activity for stock: %s created", symbol);
         tvStockName.setText(symbol);
+        tvStockPrice.setText(price);
+        tvStockChange.setText(change);
+        tvStockPercent.setText(absolute);
     }
 
     private class StockDetailsAsyncTask extends AsyncTask<String, Void, List<HistoricalQuote>> {

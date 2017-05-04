@@ -72,7 +72,7 @@ public class DetailActivity extends AppCompatActivity {
             List<HistoricalQuote> stockHistQuotes = null;
 
             try {
-                stock = YahooFinance.get("GOOG", true);
+                stock = YahooFinance.get(strings[0], true);
                 stockHistQuotes = stock.getHistory(from, to, Interval.DAILY);
                 for (HistoricalQuote quote : stockHistQuotes) {
                     Log.v("Quote: ", "close > " + quote.getClose().toString());

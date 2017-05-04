@@ -7,11 +7,11 @@ Nanodegree students are evaluated against the project [rubric](https://review.ud
 
 # Required changed
 
-* RTL text for Arabic must be supported properly
-* Must not crash when adding a new stock
-* Must show a detail screen for stocks
-* Must create a widget to show stocks
-* Tablet layout
+* RTL text for Arabic must be supported properly [Done]
+* Must not crash when adding a new stock [Done]
+* Must show a detail screen for stocks [In Progress]
+* Must create a widget to show stocks [Nearly Complete]
+* Tablet layout [Planning]
 
 
 # Screenshots
@@ -27,7 +27,7 @@ Nanodegree students are evaluated against the project [rubric](https://review.ud
 
 * Creating a widget that would auto update with data from a content provider
 * Problems with upstream library/API (Yahoo Finance) can cause major issues downstream, these included crashes and empty history data
-* ConstraintLayout this is the future of layouts
+* ConstraintLayout is quite a nice way to do things, but requires some clunky wrestling with the UI/Text editor
 
 
 # Contributing

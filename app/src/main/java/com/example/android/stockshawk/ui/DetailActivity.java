@@ -11,11 +11,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.android.stockshawk.R;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -52,7 +57,7 @@ public class DetailActivity extends AppCompatActivity {
 
     @SuppressWarnings("WeakerAcess")
     @BindView(R.id.grp_historical_data)
-    GraphView grpHistorical;
+    LineChart grpHistorical;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,10 +82,10 @@ public class DetailActivity extends AppCompatActivity {
         tvStockPercent.setText(absolute);
     }
 
-    private class StockDetailsAsyncTask extends AsyncTask<String, Void, List<HistoricalQuote>> {
+    private class StockDetailsAsyncTask extends AsyncTask<String, Void, List<Entry>> {
 
         @Override
-        protected List<HistoricalQuote> doInBackground(String... strings) {
+        protected List<Entry> doInBackground(String... strings) {
 
             Calendar from = Calendar.getInstance();
             Calendar to = Calendar.getInstance();
@@ -89,37 +94,33 @@ public class DetailActivity extends AppCompatActivity {
 
             Stock stock;
             List<HistoricalQuote> stockHistQuotes = null;
+            List<Entry> lineChartEntries = new ArrayList<>();
+            int counter = 0;
 
             try {
                 stock = YahooFinance.get(strings[0], true);
                 stockHistQuotes = stock.getHistory(from, to, Interval.DAILY);
                 for (HistoricalQuote quote : stockHistQuotes) {
                     Log.v("Quote: ", "close > " + quote.getClose().toString());
+                    lineChartEntries.add(new Entry(counter, quote.getClose().floatValue()));
+                    counter++;
                 }
             } catch (IOException e) {
                 Timber.d(e.toString());
             }
-            return stockHistQuotes;
+            return lineChartEntries;
         }
 
         @Override
-        protected void onPostExecute(List<HistoricalQuote> s) {
+        protected void onPostExecute(List<Entry> data) {
 
             tvStockName.setVisibility(View.VISIBLE);
             pbLoadingIndicator.setVisibility(View.GONE);
 
-            LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {});
-
-            System.out.println(s.size());
-
-            double counter = 0;
-
-            for (HistoricalQuote price : s) {
-                //series.appendData(new DataPoint(price.getDate(), price.getClose(), true, 8);
-                counter++;
-            }
-
-            grpHistorical.addSeries(series);
+            LineDataSet lineDataSet = new LineDataSet(data, "price");
+            LineData lineData = new LineData(lineDataSet);
+            grpHistorical.setData(lineData);
+            grpHistorical.invalidate();  // refresh
         }
     } // StockDetailsAsyncTask
 

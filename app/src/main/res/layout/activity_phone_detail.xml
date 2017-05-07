@@ -95,7 +95,7 @@
         app:layout_constraintTop_toTopOf="@+id/grp_historical_data"
         app:layout_constraintVertical_bias="0.46" />
 
-    <com.jjoe64.graphview.GraphView
+    <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/grp_historical_data"
         android:layout_width="275dp"
         android:layout_height="315dp"

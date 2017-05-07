@@ -16,7 +16,8 @@
         android:theme="@style/AppTheme"
         android:supportsRtl="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.PhoneActivity">
+
+        <activity android:name=".ui.MasterDetail">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,8 +25,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.DetailActivity">
-        </activity>
+        <activity android:name=".ui.PhoneActivity" />
+        <activity android:name=".ui.DetailActivity" />
 
         <!-- Simple Widget Receiver -->
         <receiver

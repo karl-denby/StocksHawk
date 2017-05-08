@@ -9,16 +9,30 @@ Nanodegree students are evaluated against the project [rubric](https://review.ud
 
 * RTL text for Arabic must be supported properly [Done]
 * Must not crash when adding a new stock [Done]
-* Must show a detail screen for stocks [In Progress]
-* Must create a widget to show stocks [Nearly Complete]
-* Tablet layout [Planning]
+* Must show a detail screen for stocks [Done]
+* Must create a widget to show stocks [Done]
+* Widget auto refreshes with content provider [In Progress]
+* Tablet layout [In Progress]
 
 
 # Screenshots
+Main Screen - with FAB (Floating action button)
 
 ![PhoneActivity](https://github.com/karl-denby/StocksHawk/raw/master/screenshots/00_main.png)
 
+Detail Screen - Loading
+
 ![DetailActivity](https://github.com/karl-denby/StocksHawk/raw/master/screenshots/01_detail.png)
+
+Detail Screen - with graph
+
+![DetailActivity](https://github.com/karl-denby/StocksHawk/raw/master/screenshots/02_detail.png)
+
+Add a Stock
+
+![AddStockFragment](https://github.com/karl-denby/StocksHawk/raw/master/screenshots/03_add_stock.png)
+
+Widget
 
 ![Widget](https://github.com/karl-denby/StocksHawk/raw/master/screenshots/widget_preview.png)
 

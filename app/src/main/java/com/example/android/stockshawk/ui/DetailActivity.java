@@ -15,9 +15,6 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -118,6 +115,7 @@ public class DetailActivity extends AppCompatActivity {
             pbLoadingIndicator.setVisibility(View.GONE);
 
             LineDataSet lineDataSet = new LineDataSet(data, "price");
+            lineDataSet.setColors(new int[] {R.color.material_blue_500}, getApplicationContext());
             LineData lineData = new LineData(lineDataSet);
             grpHistorical.setData(lineData);
             grpHistorical.invalidate();  // refresh

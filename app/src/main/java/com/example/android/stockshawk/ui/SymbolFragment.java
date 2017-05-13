@@ -70,12 +70,27 @@ public class SymbolFragment extends Fragment implements
     public void onClick(String symbol, String price, String change, String absolute) {
         Timber.d("Symbol clicked: %s", symbol);
 
-        Intent intent = new Intent(mContext, DetailActivity.class);
-        intent.putExtra("symbol", symbol);
-        intent.putExtra("price", price);
-        intent.putExtra("change", change);
-        intent.putExtra("absolute", absolute);
-        startActivity(intent);
+        boolean tablet = getResources().getBoolean(R.bool.isTablet);
+        if (tablet) {
+
+            Bundle arguments = new Bundle();
+            arguments.putString("symbol", symbol);
+            arguments.putString("price", price);
+            arguments.putString("change", change);
+            arguments.putString("absolute", absolute);
+
+            DetailsFragment fragment = new DetailsFragment();
+            fragment.setArguments(arguments);
+            getFragmentManager().beginTransaction().replace(R.id.details_frag, fragment).commit();
+
+        } else {
+            Intent intent = new Intent(mContext, DetailActivity.class);
+            intent.putExtra("symbol", symbol);
+            intent.putExtra("price", price);
+            intent.putExtra("change", change);
+            intent.putExtra("absolute", absolute);
+            startActivity(intent);
+        }
     }
 
     public void button(@SuppressWarnings("UnusedParameters") View view) {

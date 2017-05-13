@@ -13,8 +13,6 @@ import butterknife.ButterKnife;
 
 public class MasterDetail extends Activity implements SymbolFragment.OnClickListener {
 
-    Toast mToast;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,24 +23,18 @@ public class MasterDetail extends Activity implements SymbolFragment.OnClickList
 
     @Override
     public void OnClick(View view) {
-        // The user selected the headline of an article from the HeadlinesFragment
-        // Do something here to display that article
+        // The user selected the Symbol of a stock from the SymbolFragment
+        // Do something here to display that stocks details
 
         DetailsFragment detailsFragment = (DetailsFragment)
                 getFragmentManager().findFragmentById(R.id.details_frag);
 
-        if (mToast!=null) {
-            mToast.cancel();
-        }
-
         if (detailsFragment!= null) {
             // If detail frag is available, we're in two-pane/tablet layout...
-            mToast = Toast.makeText(this, "Tablet Layout", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(this, "Tablet Layout", Toast.LENGTH_SHORT);
+            toast.show();
 
         } else {
-            // Otherwise, we're in the one-pane layout and must swap frags...
-            mToast = Toast.makeText(this, "Phone Layout", Toast.LENGTH_SHORT);
-
             // Create fragment and give it an argument for the selected article
             DetailsFragment newFragment = new DetailsFragment();
             Bundle args = new Bundle();
@@ -56,10 +48,6 @@ public class MasterDetail extends Activity implements SymbolFragment.OnClickList
 
             // Commit the transaction
             transaction.commit();
-        }
-
-        if (mToast!=null) {
-            mToast.show();
         }
 
     }

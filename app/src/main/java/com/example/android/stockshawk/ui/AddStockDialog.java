@@ -1,13 +1,11 @@
 package com.example.android.stockshawk.ui;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,13 +15,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.android.stockshawk.R;
-import com.example.android.stockshawk.data.PrefUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
 public class AddStockDialog extends DialogFragment {
+
+    public interface StockAddedRequestListener {
+        void onAddStockRequest(String symbol);
+    }
+
 
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.dialog_stock)
@@ -52,8 +54,7 @@ public class AddStockDialog extends DialogFragment {
         builder.setPositiveButton(getString(R.string.dialog_add),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        //addStock();
-                        PrefUtils.addStock(getActivity(), stock.getText().toString());
+                        addStock();
                     }
                 });
         builder.setNegativeButton(getString(R.string.dialog_cancel), null);
@@ -68,15 +69,21 @@ public class AddStockDialog extends DialogFragment {
     }
 
     private void addStock() {
-        Activity parent = getActivity();
-        Log.v("DEBUG", "Activity is " + parent.toString());
-        if (parent instanceof MasterDetail) {
+
+        // Notice the use of `getTargetFragment` which will be set when the dialog is displayed
+        StockAddedRequestListener listener = (StockAddedRequestListener) getTargetFragment();
+        listener.onAddStockRequest(stock.getText().toString());
+        dismiss();
+
+        //Activity parent = getActivity();
+        //Log.v("DEBUG", "Activity is " + parent.toString());
+        //if (parent instanceof MasterDetail) {
             //((MasterDetail) getActivity()).addStock(stock.getText().toString());
 
-            SymbolFragment fragment = (SymbolFragment) getParentFragment();
-            fragment.addStock(stock.getText().toString());
-        }
-        dismissAllowingStateLoss();
+            //SymbolFragment fragment = (SymbolFragment) getParentFragment();
+            //fragment.addStock(stock.getText().toString());
+        //}
+        //dismissAllowingStateLoss();
     }
 
 }

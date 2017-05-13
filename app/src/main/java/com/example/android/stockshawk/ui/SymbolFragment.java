@@ -10,6 +10,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -30,14 +31,19 @@ import com.example.android.stockshawk.data.Contract;
 import com.example.android.stockshawk.data.PrefUtils;
 import com.example.android.stockshawk.sync.QuoteSyncJob;
 
+import java.io.IOException;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
+import yahoofinance.Stock;
+import yahoofinance.YahooFinance;
 
 public class SymbolFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>,
         SwipeRefreshLayout.OnRefreshListener,
-        StockAdapter.StockAdapterOnClickHandler {
+        StockAdapter.StockAdapterOnClickHandler,
+        AddStockDialog.StockAddedRequestListener {
 
     private static final String TAG = "MasterDetail";
     private static final int STOCK_LOADER = 0;
@@ -73,19 +79,24 @@ public class SymbolFragment extends Fragment implements
     }
 
     public void button(@SuppressWarnings("UnusedParameters") View view) {
-        new AddStockDialog().show(getFragmentManager(), "StockDialogFragment");
+        AddStockDialog addStockDialog = new AddStockDialog();
+        addStockDialog.setTargetFragment(SymbolFragment.this, 300);
+        addStockDialog.show(getFragmentManager(), "StockDialogFragment");
     }
 
-    void addStock(String symbol) {
-        Log.v("DEBUG", "addStock Code Called");
+    //void addStock(String symbol) {}
+
+    @Override
+    public void onAddStockRequest(String symbol) {
+        Log.v("DEBUG", "onAddStockRequest Code Called");
         if (symbol != null && !symbol.isEmpty()) {
             if (networkUp()) {
                 swipeRefreshLayout.setRefreshing(true);
+                new StockCheckAsyncTask().execute(symbol);
             } else {
                 String message = getString(R.string.toast_stock_added_no_connectivity, symbol);
                 Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
             }
-            //new StockCheckAsyncTask().execute(symbol);
         }
     }
 
@@ -189,7 +200,7 @@ public class SymbolFragment extends Fragment implements
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 String symbol = adapter.getSymbolAtPosition(viewHolder.getAdapterPosition());
-                PrefUtils.removeStock(getActivity(), symbol);
+                PrefUtils.removeStock(mContext, symbol);
                 getActivity().getContentResolver().delete(Contract.Quote.makeUriForStock(symbol), null, null);
             }
         }).attachToRecyclerView(stockRecyclerView);
@@ -231,4 +242,43 @@ public class SymbolFragment extends Fragment implements
         swipeRefreshLayout.setRefreshing(false);
         adapter.setCursor(null);
     }
+
+    private class StockCheckAsyncTask extends AsyncTask<String, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(String... symbol) {
+
+            Stock stock = null;
+
+            try {
+                stock = YahooFinance.get(symbol[0], false);
+            } catch (IOException e) {
+                Log.v("CHECK VALID", "Network Error: Exception during Stock.get(symbol)");
+            }
+
+            if (stock.getQuote().getAsk() != null) {
+                PrefUtils.addStock(mContext, symbol[0]);
+                QuoteSyncJob.syncImmediately(mContext);
+                return true;
+            } else {
+                return false;
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(Boolean valid) {
+            super.onPostExecute(valid);
+            if (!valid) {
+                swipeRefreshLayout.setRefreshing(false);
+
+                if (mToast!=null) {
+                    mToast.cancel();
+                }
+                mToast = Toast.makeText(mContext, "Unrecognized Stock", Toast.LENGTH_LONG);
+                mToast.show();
+            }
+        }
+    }
+
 }

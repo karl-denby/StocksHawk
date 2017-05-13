@@ -99,8 +99,6 @@ public class SymbolFragment extends Fragment implements
         addStockDialog.show(getFragmentManager(), "StockDialogFragment");
     }
 
-    //void addStock(String symbol) {}
-
     @Override
     public void onAddStockRequest(String symbol) {
         Log.v("DEBUG", "onAddStockRequest Code Called");

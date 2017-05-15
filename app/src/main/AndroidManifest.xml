@@ -28,10 +28,10 @@
         <activity android:name=".ui.PhoneActivity" />
         <activity android:name=".ui.DetailActivity" />
 
-        <!-- Simple Widget Receiver -->
+        <!-- Widget Receiver -->
         <receiver
             android:name="com.example.android.stockshawk.widget.SimpleWidgetProvider"
-            android:label="Simple Widget">
+            android:label="Widget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
              </intent-filter>
@@ -42,7 +42,7 @@
 
         <service android:name=".widget.SimpleWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
-        <!-- Simple Widget Service -->
+        <!-- Widget Service -->
 
         <service
             android:name=".sync.QuoteIntentService"

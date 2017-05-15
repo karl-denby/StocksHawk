@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 
 public class AddStockDialog extends DialogFragment {
 
-    public interface StockAddedRequestListener {
+    interface StockAddedRequestListener {
         void onAddStockRequest(String symbol);
     }
 
@@ -43,7 +43,7 @@ public class AddStockDialog extends DialogFragment {
         stock.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                //addStock();
+                addStock();
                 return true;
             }
         });
@@ -69,21 +69,10 @@ public class AddStockDialog extends DialogFragment {
     }
 
     private void addStock() {
-
         // Notice the use of `getTargetFragment` which will be set when the dialog is displayed
         StockAddedRequestListener listener = (StockAddedRequestListener) getTargetFragment();
         listener.onAddStockRequest(stock.getText().toString());
         dismiss();
-
-        //Activity parent = getActivity();
-        //Log.v("DEBUG", "Activity is " + parent.toString());
-        //if (parent instanceof MasterDetail) {
-            //((MasterDetail) getActivity()).addStock(stock.getText().toString());
-
-            //SymbolFragment fragment = (SymbolFragment) getParentFragment();
-            //fragment.addStock(stock.getText().toString());
-        //}
-        //dismissAllowingStateLoss();
     }
 
 }

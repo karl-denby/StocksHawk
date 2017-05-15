@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Binder;
-import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -14,8 +13,6 @@ import com.example.android.stockshawk.data.Contract;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.example.android.stockshawk.R.id.price;
 
 
 public class SimpleWidgetService extends RemoteViewsService {
@@ -30,7 +27,6 @@ class ListViewRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactor
     private Context mContext;
     private Intent mIntent;
     private Cursor mCursor;
-    private List mFakeData = new ArrayList();
     private List mRealSymbol = new ArrayList();
     private List mRealPrice = new ArrayList();
     private List mRealChange = new ArrayList();
@@ -44,10 +40,6 @@ class ListViewRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactor
     public void onCreate() {
         // Setup connections to data/cursors
         // nothing heavy as we have 20 seconds before an ANR gets shown
-
-        mFakeData.add("TST1");
-        mFakeData.add("TST2");
-        mFakeData.add("TST3");
     }
 
     @Override
@@ -59,20 +51,20 @@ class ListViewRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactor
     public void onDataSetChanged() {
         // Do heavy stuff here
 
-        // RemoteView does not have permission to read the URI, so clear out the callin identiy 1st
+        // RemoteView does not have permission to read the URI, clear out the calling identity 1st
         final long token = Binder.clearCallingIdentity();
         try {
 
-            Log.v("DEBUG: ", "onDataSetChanged");
             Uri selection = Contract.Quote.URI;
             String[] projection = {"*"};
+            String sortOrder = Contract.Quote.COLUMN_SYMBOL;
 
             mCursor = mContext.getContentResolver().query(
                     selection,
                     projection,
                     null,
                     null,
-                    null
+                    sortOrder
             );
 
             mRealSymbol = new ArrayList();
@@ -83,13 +75,11 @@ class ListViewRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactor
             int price = mCursor.getColumnIndex(Contract.Quote.COLUMN_PRICE);
             int change = mCursor.getColumnIndex(Contract.Quote.COLUMN_PERCENTAGE_CHANGE);
 
-            Log.v("DEBUG: ", "Do we have a cursor?");
             if (mCursor != null) {
                 while (mCursor.moveToNext()) {
                     mRealSymbol.add(mCursor.getString(symbol));
                     mRealPrice.add(mCursor.getString(price));
                     mRealChange.add(mCursor.getString(change));
-                    Log.v("DEBUG: ", "Symbol is " + mCursor.getString(symbol));
                 }
             }
 

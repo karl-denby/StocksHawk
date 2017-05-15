@@ -14,6 +14,8 @@ import com.example.android.stockshawk.data.Contract;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.android.stockshawk.R.id.symbol;
+
 
 public class SimpleWidgetService extends RemoteViewsService {
     @Override
@@ -25,15 +27,13 @@ public class SimpleWidgetService extends RemoteViewsService {
 class ListViewRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     private Context mContext;
-    private Intent mIntent;
-    private Cursor mCursor;
-    private List mRealSymbol = new ArrayList();
-    private List mRealPrice = new ArrayList();
-    private List mRealChange = new ArrayList();
+
+    private List<String> mRealSymbol = new ArrayList<>();
+    private List<String> mRealPrice = new ArrayList<>();
+    private List<String> mRealChange = new ArrayList<>();
 
     ListViewRemoteViewsFactory(Context context, Intent intent) {
         mContext = context;
-        mIntent = intent;
     }
 
     @Override
@@ -50,6 +50,7 @@ class ListViewRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactor
     @Override
     public void onDataSetChanged() {
         // Do heavy stuff here
+        Cursor cursor;
 
         // RemoteView does not have permission to read the URI, clear out the calling identity 1st
         final long token = Binder.clearCallingIdentity();
@@ -59,7 +60,7 @@ class ListViewRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactor
             String[] projection = {"*"};
             String sortOrder = Contract.Quote.COLUMN_SYMBOL;
 
-            mCursor = mContext.getContentResolver().query(
+            cursor = mContext.getContentResolver().query(
                     selection,
                     projection,
                     null,
@@ -67,28 +68,26 @@ class ListViewRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactor
                     sortOrder
             );
 
-            mRealSymbol = new ArrayList();
-            mRealPrice = new ArrayList();
-            mRealChange = new ArrayList();
+            mRealSymbol = new ArrayList<>();
+            mRealPrice = new ArrayList<>();
+            mRealChange = new ArrayList<>();
 
-            int symbol = mCursor.getColumnIndex(Contract.Quote.COLUMN_SYMBOL);
-            int price = mCursor.getColumnIndex(Contract.Quote.COLUMN_PRICE);
-            int change = mCursor.getColumnIndex(Contract.Quote.COLUMN_PERCENTAGE_CHANGE);
+            if (cursor.moveToFirst()) {
+                int symbol = cursor.getColumnIndex(Contract.Quote.COLUMN_SYMBOL);
+                int price = cursor.getColumnIndex(Contract.Quote.COLUMN_PRICE);
+                int change = cursor.getColumnIndex(Contract.Quote.COLUMN_PERCENTAGE_CHANGE);
 
-            if (mCursor != null) {
-                while (mCursor.moveToNext()) {
-                    mRealSymbol.add(mCursor.getString(symbol));
-                    mRealPrice.add(mCursor.getString(price));
-                    mRealChange.add(mCursor.getString(change));
+                while (cursor.moveToNext()) {
+                    mRealSymbol.add(cursor.getString(symbol));
+                    mRealPrice.add(cursor.getString(price));
+                    mRealChange.add(cursor.getString(change));
                 }
             }
-
 
         } finally {
             Binder.restoreCallingIdentity(token);
         }
-
-
+        cursor.close();
     }
 
     @Override
@@ -117,9 +116,9 @@ class ListViewRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactor
     @Override
     public RemoteViews getViewAt(int position) {
         RemoteViews remoteViews = new RemoteViews(mContext.getPackageName(), R.layout.list_item_quote);
-        remoteViews.setTextViewText(R.id.symbol, mRealSymbol.get(position).toString());
-        remoteViews.setTextViewText(R.id.price, mRealPrice.get(position).toString());
-        remoteViews.setTextViewText(R.id.change, mRealChange.get(position).toString());
+        remoteViews.setTextViewText(symbol, mRealSymbol.get(position));
+        remoteViews.setTextViewText(R.id.price, mRealPrice.get(position));
+        remoteViews.setTextViewText(R.id.change, mRealChange.get(position));
         return remoteViews;
     }
 

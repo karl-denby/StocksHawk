@@ -14,6 +14,8 @@ import com.example.android.stockshawk.data.Contract;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.android.stockshawk.R.id.change;
+import static com.example.android.stockshawk.R.id.price;
 import static com.example.android.stockshawk.R.id.symbol;
 
 
@@ -72,16 +74,23 @@ class ListViewRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactor
             mRealPrice = new ArrayList<>();
             mRealChange = new ArrayList<>();
 
-            if (cursor.moveToFirst()) {
-                int symbol = cursor.getColumnIndex(Contract.Quote.COLUMN_SYMBOL);
-                int price = cursor.getColumnIndex(Contract.Quote.COLUMN_PRICE);
-                int change = cursor.getColumnIndex(Contract.Quote.COLUMN_PERCENTAGE_CHANGE);
+            cursor.moveToFirst();
+            int symbol = cursor.getColumnIndex(Contract.Quote.COLUMN_SYMBOL);
+            int price = cursor.getColumnIndex(Contract.Quote.COLUMN_PRICE);
+            int change = cursor.getColumnIndex(Contract.Quote.COLUMN_PERCENTAGE_CHANGE);
 
-                while (cursor.moveToNext()) {
-                    mRealSymbol.add(cursor.getString(symbol));
-                    mRealPrice.add(cursor.getString(price));
-                    mRealChange.add(cursor.getString(change));
-                }
+            mRealSymbol.add(cursor.getString(symbol));
+            mRealPrice.add(cursor.getString(price));
+            mRealChange.add(cursor.getString(change));
+
+            while (cursor.moveToNext()) {
+                symbol = cursor.getColumnIndex(Contract.Quote.COLUMN_SYMBOL);
+                price = cursor.getColumnIndex(Contract.Quote.COLUMN_PRICE);
+                change = cursor.getColumnIndex(Contract.Quote.COLUMN_PERCENTAGE_CHANGE);
+
+                mRealSymbol.add(cursor.getString(symbol));
+                mRealPrice.add(cursor.getString(price));
+                mRealChange.add(cursor.getString(change));
             }
 
         } finally {
@@ -102,7 +111,7 @@ class ListViewRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactor
 
     @Override
     public boolean hasStableIds() {
-        return true;
+        return false;
     }
 
     @Override
@@ -117,8 +126,8 @@ class ListViewRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactor
     public RemoteViews getViewAt(int position) {
         RemoteViews remoteViews = new RemoteViews(mContext.getPackageName(), R.layout.list_item_quote);
         remoteViews.setTextViewText(symbol, mRealSymbol.get(position));
-        remoteViews.setTextViewText(R.id.price, mRealPrice.get(position));
-        remoteViews.setTextViewText(R.id.change, mRealChange.get(position));
+        remoteViews.setTextViewText(price, mRealPrice.get(position));
+        remoteViews.setTextViewText(change, mRealChange.get(position));
         return remoteViews;
     }
 

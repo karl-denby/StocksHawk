@@ -18,7 +18,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,10 +73,10 @@ public class SymbolFragment extends Fragment implements
         if (tablet) {
 
             Bundle arguments = new Bundle();
-            arguments.putString("symbol", symbol);
-            arguments.putString("price", price);
-            arguments.putString("change", change);
-            arguments.putString("absolute", absolute);
+            arguments.putString(getString(R.string.bundle_key_symbol), symbol);
+            arguments.putString(getString(R.string.bundle_key_price), price);
+            arguments.putString(getString(R.string.bundle_key_change), change);
+            arguments.putString(getString(R.string.bundle_key_absolute), absolute);
 
             DetailsFragment fragment = new DetailsFragment();
             fragment.setArguments(arguments);
@@ -85,10 +84,10 @@ public class SymbolFragment extends Fragment implements
 
         } else {
             Intent intent = new Intent(mContext, DetailActivity.class);
-            intent.putExtra("symbol", symbol);
-            intent.putExtra("price", price);
-            intent.putExtra("change", change);
-            intent.putExtra("absolute", absolute);
+            intent.putExtra(getString(R.string.bundle_key_symbol), symbol);
+            intent.putExtra(getString(R.string.bundle_key_price), price);
+            intent.putExtra(getString(R.string.bundle_key_change), change);
+            intent.putExtra(getString(R.string.bundle_key_absolute), absolute);
             startActivity(intent);
         }
     }
@@ -101,7 +100,6 @@ public class SymbolFragment extends Fragment implements
 
     @Override
     public void onAddStockRequest(String symbol) {
-        Log.v("DEBUG", "onAddStockRequest Code Called");
         if (symbol != null && !symbol.isEmpty()) {
             if (networkUp()) {
                 swipeRefreshLayout.setRefreshing(true);
@@ -180,8 +178,6 @@ public class SymbolFragment extends Fragment implements
                     mCallback.OnClick(view);
                 }
             });
-        } else {
-            Log.v("DEBUG", "Didn't find framelayout reference");
         }
 
         ButterKnife.bind(getActivity());
@@ -266,7 +262,7 @@ public class SymbolFragment extends Fragment implements
             try {
                 stock = YahooFinance.get(symbol[0], false);
             } catch (IOException e) {
-                Log.v("CHECK VALID", "Network Error: Exception during Stock.get(symbol)");
+                Timber.d("Network Error: Exception during Stock.get(symbol)");
             }
 
             if (stock.getQuote().getAsk() != null) {
@@ -288,7 +284,7 @@ public class SymbolFragment extends Fragment implements
                 if (mToast!=null) {
                     mToast.cancel();
                 }
-                mToast = Toast.makeText(mContext, "Unrecognized Stock", Toast.LENGTH_LONG);
+                mToast = Toast.makeText(mContext, R.string.unrecognized_stock, Toast.LENGTH_LONG);
                 mToast.show();
             }
         }

@@ -18,6 +18,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,6 +65,7 @@ public class SymbolFragment extends Fragment implements
     private StockAdapter adapter;
     Toast mToast;
     Context mContext;
+    String mSymbol;
 
     @Override
     public void onClick(String symbol, String price, String change, String absolute) {
@@ -103,6 +105,7 @@ public class SymbolFragment extends Fragment implements
         if (symbol != null && !symbol.isEmpty()) {
             if (networkUp()) {
                 swipeRefreshLayout.setRefreshing(true);
+                mSymbol = symbol;
                 new StockCheckAsyncTask().execute(symbol);
             } else {
                 String message = getString(R.string.toast_stock_added_no_connectivity, symbol);
@@ -124,7 +127,7 @@ public class SymbolFragment extends Fragment implements
 
     @Override
     public void onRefresh() {
-
+        Log.v("DEBUG", "SymbolFragment.onRefresh()");
         QuoteSyncJob.syncImmediately(mContext);
 
         if (!networkUp() && adapter.getItemCount() == 0) {
@@ -266,8 +269,6 @@ public class SymbolFragment extends Fragment implements
             }
 
             if (stock.getQuote().getAsk() != null) {
-                PrefUtils.addStock(mContext, symbol[0]);
-                QuoteSyncJob.syncImmediately(mContext);
                 return true;
             } else {
                 return false;
@@ -286,6 +287,9 @@ public class SymbolFragment extends Fragment implements
                 }
                 mToast = Toast.makeText(mContext, R.string.unrecognized_stock, Toast.LENGTH_LONG);
                 mToast.show();
+            } else {
+                PrefUtils.addStock(mContext, mSymbol);
+                QuoteSyncJob.syncImmediately(mContext);
             }
         }
     }

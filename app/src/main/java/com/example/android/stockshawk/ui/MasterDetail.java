@@ -3,6 +3,7 @@ package com.example.android.stockshawk.ui;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -16,12 +17,14 @@ public class MasterDetail extends Activity implements SymbolFragment.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.master_detail);
-        ButterKnife.bind(this);
         super.onCreate(savedInstanceState);
+        ButterKnife.bind(this);
+        Log.v("DEBUG", "MasterDetail.onCreate()");
     }
 
     @Override
     public void OnClick(View view) {
+        Log.v("DEBUG", "MasterDetail.onClick()");
         // The user selected the Symbol of a stock from the SymbolFragment
         // Do something here to display that stocks details
 

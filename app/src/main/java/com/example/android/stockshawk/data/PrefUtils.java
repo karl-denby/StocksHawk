@@ -3,13 +3,13 @@ package com.example.android.stockshawk.data;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.example.android.stockshawk.R;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
 
 public final class PrefUtils {
 
@@ -24,15 +24,19 @@ public final class PrefUtils {
         HashSet<String> defaultStocks = new HashSet<>(Arrays.asList(defaultStocksList));
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
+        Log.v("DEBUG: ", "PrefUtils.getStocks(Context) prefs = " + prefs.toString());
+
         boolean initialized = prefs.getBoolean(initializedKey, false);
 
         if (!initialized) {
+            Log.v("DEBUG: ", "PrefUtils.getStocks(Context) is initalizing ");
             SharedPreferences.Editor editor = prefs.edit();
             editor.putBoolean(initializedKey, true);
             editor.putStringSet(stocksKey, defaultStocks);
-            editor.apply();
+            editor.commit();
             return defaultStocks;
         }
+        Log.v("DEBUG: ", "PrefUtils.getStringSet() stock = " + prefs.getStringSet(stocksKey, new HashSet<String>()));
         return prefs.getStringSet(stocksKey, new HashSet<String>());
     }
 
@@ -49,7 +53,7 @@ public final class PrefUtils {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putStringSet(key, stocks);
-        editor.apply();
+        editor.commit();
     }
 
     public static void addStock(Context context, String symbol) {
@@ -84,7 +88,7 @@ public final class PrefUtils {
             editor.putString(key, absoluteKey);
         }
 
-        editor.apply();
+        editor.commit();
     }
 
 }

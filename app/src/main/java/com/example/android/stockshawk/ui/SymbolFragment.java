@@ -148,6 +148,19 @@ public class SymbolFragment extends Fragment implements
 
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            mCallback = (OnClickListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnClickListener");
+        }
+    }
+
+    /*
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
@@ -160,6 +173,7 @@ public class SymbolFragment extends Fragment implements
                     + " must implement OnClickListener");
         }
     }
+    */
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

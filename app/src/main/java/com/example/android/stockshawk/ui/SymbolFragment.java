@@ -270,9 +270,11 @@ public class SymbolFragment extends Fragment implements
                 Timber.d("Network Error: Exception during Stock.get(symbol)");
             }
 
-            if (stock.getQuote().getAsk() != null) {
+            if (stock.isValid()) {
+                Log.v("DEBUG", stock.getSymbol() + " is valid");
                 return true;
             } else {
+                Log.v("DEBUG", stock.getSymbol() + " invalid");
                 return false;
             }
 

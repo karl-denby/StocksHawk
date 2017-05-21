@@ -19,7 +19,6 @@ public class MasterDetail extends Activity implements SymbolFragment.OnClickList
         setContentView(R.layout.master_detail);
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
-        Log.v("DEBUG", "MasterDetail.onCreate()");
     }
 
     @Override

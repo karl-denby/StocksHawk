@@ -2,10 +2,9 @@ package com.example.android.stockshawk.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.example.android.stockshawk.R;
+import com.example.android.stockshawk.StocksHawkApp;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -17,32 +16,36 @@ public final class PrefUtils {
     }
 
     public static Set<String> getStocks(Context context) {
+        Context applicationContext = StocksHawkApp.getContextOfApplication();
+        String prefsName = context.getString(R.string.app_name);
         String stocksKey = context.getString(R.string.pref_stocks_key);
         String initializedKey = context.getString(R.string.pref_stocks_initialized_key);
         String[] defaultStocksList = context.getResources().getStringArray(R.array.default_stocks);
 
         HashSet<String> defaultStocks = new HashSet<>(Arrays.asList(defaultStocksList));
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
-        Log.v("DEBUG: ", "PrefUtils.getStocks(Context) prefs = " + prefs.toString());
-
+        SharedPreferences prefs = applicationContext.getSharedPreferences(prefsName, Context.MODE_PRIVATE);
         boolean initialized = prefs.getBoolean(initializedKey, false);
 
         if (!initialized) {
-            Log.v("DEBUG: ", "PrefUtils.getStocks(Context) is initalizing ");
             SharedPreferences.Editor editor = prefs.edit();
+            editor.clear();
             editor.putBoolean(initializedKey, true);
             editor.putStringSet(stocksKey, defaultStocks);
-            editor.commit();
+            editor.apply();
             return defaultStocks;
         }
-        Log.v("DEBUG: ", "PrefUtils.getStringSet() stock = " + prefs.getStringSet(stocksKey, new HashSet<String>()));
         return prefs.getStringSet(stocksKey, new HashSet<String>());
     }
 
     private static void editStockPref(Context context, String symbol, Boolean add) {
+        Context applicationContext = StocksHawkApp.getContextOfApplication();
+        String initializedKey = context.getString(R.string.pref_stocks_initialized_key);
+        String prefsName = context.getString(R.string.app_name);
         String key = context.getString(R.string.pref_stocks_key);
+        String stocksKey = context.getString(R.string.pref_stocks_key);
+
         Set<String> stocks = getStocks(context);
+
 
         if (add) {
             stocks.add(symbol);
@@ -50,10 +53,12 @@ public final class PrefUtils {
             stocks.remove(symbol);
         }
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences prefs = applicationContext.getSharedPreferences(prefsName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
+        editor.clear();
+        editor.putBoolean(initializedKey, true);
         editor.putStringSet(key, stocks);
-        editor.commit();
+        editor.apply();
     }
 
     public static void addStock(Context context, String symbol) {
@@ -65,18 +70,22 @@ public final class PrefUtils {
     }
 
     public static String getDisplayMode(Context context) {
+        String prefsName = context.getString(R.string.app_name);
+        Context applicationContext = StocksHawkApp.getContextOfApplication();
         String key = context.getString(R.string.pref_display_mode_key);
         String defaultValue = context.getString(R.string.pref_display_mode_default);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences prefs = applicationContext.getSharedPreferences(prefsName, Context.MODE_PRIVATE);
         return prefs.getString(key, defaultValue);
     }
 
     public static void toggleDisplayMode(Context context) {
+        String prefsName = context.getString(R.string.app_name);
+        Context applicationContext = StocksHawkApp.getContextOfApplication();
         String key = context.getString(R.string.pref_display_mode_key);
         String absoluteKey = context.getString(R.string.pref_display_mode_absolute_key);
         String percentageKey = context.getString(R.string.pref_display_mode_percentage_key);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences prefs = applicationContext.getSharedPreferences(prefsName, Context.MODE_PRIVATE);
 
         String displayMode = getDisplayMode(context);
 
@@ -88,7 +97,7 @@ public final class PrefUtils {
             editor.putString(key, absoluteKey);
         }
 
-        editor.commit();
+        editor.apply();
     }
 
 }

@@ -29,6 +29,7 @@ public class SimpleWidgetService extends RemoteViewsService {
 class ListViewRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     private Context mContext;
+    private Intent mIntent;
 
     private List<String> mRealSymbol = new ArrayList<>();
     private List<String> mRealPrice = new ArrayList<>();
@@ -36,6 +37,7 @@ class ListViewRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactor
 
     ListViewRemoteViewsFactory(Context context, Intent intent) {
         mContext = context;
+        mIntent = intent;
     }
 
     @Override

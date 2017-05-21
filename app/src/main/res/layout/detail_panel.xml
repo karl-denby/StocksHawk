@@ -88,7 +88,7 @@
         android:layout_marginRight="4dp"
         android:layout_marginStart="4dp"
         android:layout_marginTop="4dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/grp_historical_data"
         app:layout_constraintLeft_toLeftOf="@+id/grp_historical_data"
         app:layout_constraintRight_toRightOf="@+id/grp_historical_data"

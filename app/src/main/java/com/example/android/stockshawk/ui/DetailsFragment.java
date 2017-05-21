@@ -4,6 +4,7 @@ package com.example.android.stockshawk.ui;
 import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,6 +69,14 @@ public class DetailsFragment extends Fragment {
         updateUI();
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        view.findViewById(R.id.pb_loading_indicator).setVisibility(View.GONE);
+        LineChart grp = (LineChart) view.findViewById(R.id.grp_historical_data);
+        grp.setNoDataText("");
+    }
+
     private void updateUI() {
         tvStockName = (TextView) getView().findViewById(R.id.tv_detail_stock_name);
         tvStockPrice = (TextView) getView().findViewById(R.id.tv_detail_price);
@@ -75,20 +84,28 @@ public class DetailsFragment extends Fragment {
         tvStockPercent = (TextView) getView().findViewById(R.id.tv_detail_percent);
         pbLoadingIndicator = (ProgressBar) getView().findViewById(R.id.pb_loading_indicator);
         grpHistorical = (LineChart) getView().findViewById(R.id.grp_historical_data);
+        grpHistorical.setNoDataText("");
 
         tvStockName.setText(symbol);
         tvStockPrice.setText(price);
         tvStockChange.setText(change);
         tvStockPercent.setText(absolute);
+        pbLoadingIndicator.setVisibility(View.GONE);
 
         if (symbol!=null) {
+
             new StockDetailsAsyncTask().execute(symbol);
-        } else {
-            pbLoadingIndicator.setVisibility(View.GONE);
         }
+
     }
 
     private class StockDetailsAsyncTask extends AsyncTask<String, Void, List<Entry>> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pbLoadingIndicator.setVisibility(View.VISIBLE);
+        }
 
         @Override
         protected List<Entry> doInBackground(String... strings) {
@@ -130,12 +147,13 @@ public class DetailsFragment extends Fragment {
             tvStockName.setVisibility(View.VISIBLE);
             pbLoadingIndicator.setVisibility(View.GONE);
 
-            LineDataSet lineDataSet = new LineDataSet(data, "price");
-            lineDataSet.setColors(new int[] {R.color.material_blue_500}, getActivity());
-            LineData lineData = new LineData(lineDataSet);
-            grpHistorical.setData(lineData);
-            grpHistorical.setNoDataText("");
-            grpHistorical.invalidate();  // refresh
+            if (data!=null) {
+                LineDataSet lineDataSet = new LineDataSet(data, "price");
+                lineDataSet.setColors(new int[]{R.color.material_blue_500}, getContext().getApplicationContext());
+                LineData lineData = new LineData(lineDataSet);
+                grpHistorical.setData(lineData);
+                grpHistorical.invalidate();  // refresh
+            }
         }
     } // StockDetailsAsyncTask
     

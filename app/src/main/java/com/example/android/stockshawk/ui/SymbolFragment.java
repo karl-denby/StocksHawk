@@ -137,11 +137,13 @@ public class SymbolFragment extends Fragment implements
         } else if (!networkUp()) {
             swipeRefreshLayout.setRefreshing(false);
             Toast.makeText(mContext, R.string.toast_no_connectivity, Toast.LENGTH_LONG).show();
-        } else if (PrefUtils.getStocks(mContext).size() == 0) {
+        } else if (PrefUtils.getStocks(mContext.getApplicationContext()).size() == 0) {
             swipeRefreshLayout.setRefreshing(false);
             error.setText(getString(R.string.error_no_stocks));
             error.setVisibility(View.VISIBLE);
         } else {
+            adapter.notifyDataSetChanged();
+            swipeRefreshLayout.setRefreshing(false);
             error.setVisibility(View.GONE);
         }
     }
@@ -212,7 +214,7 @@ public class SymbolFragment extends Fragment implements
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 String symbol = adapter.getSymbolAtPosition(viewHolder.getAdapterPosition());
-                PrefUtils.removeStock(mContext, symbol);
+                PrefUtils.removeStock(mContext.getApplicationContext(), symbol);
                 getActivity().getContentResolver().delete(Contract.Quote.makeUriForStock(symbol), null, null);
             }
         }).attachToRecyclerView(stockRecyclerView);
@@ -288,7 +290,7 @@ public class SymbolFragment extends Fragment implements
                 mToast = Toast.makeText(mContext, R.string.unrecognized_stock, Toast.LENGTH_LONG);
                 mToast.show();
             } else {
-                PrefUtils.addStock(mContext, mSymbol);
+                PrefUtils.addStock(mContext.getApplicationContext(), mSymbol);
                 QuoteSyncJob.syncImmediately(mContext);
             }
         }

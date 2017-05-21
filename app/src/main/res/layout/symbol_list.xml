@@ -6,7 +6,7 @@
     android:id="@+id/symbol_frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.android.stockshawk.ui.PhoneActivity" >
+    tools:context="com.example.android.stockshawk.ui.MasterDetail" >
 
 
         <android.support.v4.widget.SwipeRefreshLayout

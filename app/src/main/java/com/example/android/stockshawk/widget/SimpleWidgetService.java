@@ -1,10 +1,12 @@
 package com.example.android.stockshawk.widget;
 
+import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Bundle;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -30,6 +32,7 @@ class ListViewRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactor
 
     private Context mContext;
     private Intent mIntent;
+    private int mAppWidgetId;
 
     private List<String> mRealSymbol = new ArrayList<>();
     private List<String> mRealPrice = new ArrayList<>();
@@ -38,6 +41,8 @@ class ListViewRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactor
     ListViewRemoteViewsFactory(Context context, Intent intent) {
         mContext = context;
         mIntent = intent;
+        mAppWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
+                AppWidgetManager.INVALID_APPWIDGET_ID);
     }
 
     @Override
@@ -130,6 +135,16 @@ class ListViewRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactor
         remoteViews.setTextViewText(symbol, mRealSymbol.get(position));
         remoteViews.setTextViewText(price, mRealPrice.get(position));
         remoteViews.setTextViewText(change, mRealChange.get(position));
+
+        // that is set on the collection view in StackWidgetProvider.
+        Bundle extras = new Bundle();
+        extras.putInt(SimpleWidgetProvider.EXTRA_ITEM, position);
+        Intent fillInIntent = new Intent();
+        fillInIntent.putExtras(extras);
+        // Make it possible to distinguish the individual on-click
+        // action of a given item
+        remoteViews.setOnClickFillInIntent(R.id.widget_list_view, fillInIntent);
+
         return remoteViews;
     }
 

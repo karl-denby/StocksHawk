@@ -1,5 +1,7 @@
 package com.example.android.stockshawk.data;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,6 +11,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
+
+import com.example.android.stockshawk.R;
+import com.example.android.stockshawk.widget.SimpleWidgetProvider;
 
 
 public class StockProvider extends ContentProvider {
@@ -25,6 +31,22 @@ public class StockProvider extends ContentProvider {
         matcher.addURI(Contract.AUTHORITY, Contract.PATH_QUOTE, QUOTE);
         matcher.addURI(Contract.AUTHORITY, Contract.PATH_QUOTE_WITH_SYMBOL, QUOTE_FOR_SYMBOL);
         return matcher;
+    }
+
+    public void informUpdate() {
+        //RemoteViews remoteViews = new RemoteViews(StocksHawkApp.getContextOfApplication().getPackageName(), R.layout.widget_simple);
+        //ComponentName thisWidget = new ComponentName( getContext(), SimpleWidgetProvider.class);
+        //AppWidgetManager.getInstance( getContext() ).updateAppWidget( thisWidget, remoteViews);
+        Log.v("DEBUG", "informUpdate");
+
+        Context context = getContext();
+
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, SimpleWidgetProvider.class));
+
+        for (int widget : appWidgetIds) {
+            appWidgetManager.notifyAppWidgetViewDataChanged(widget, R.id.widget_list_view);
+        }
     }
 
     @Override
@@ -106,6 +128,7 @@ public class StockProvider extends ContentProvider {
             context.getContentResolver().notifyChange(uri, null);
         }
 
+        informUpdate();
         return returnUri;
     }
 
@@ -146,11 +169,13 @@ public class StockProvider extends ContentProvider {
             }
         }
 
+        informUpdate();
         return rowsDeleted;
     }
 
     @Override
     public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        informUpdate();
         return 0;
     }
 
@@ -180,11 +205,13 @@ public class StockProvider extends ContentProvider {
                 if (context != null) {
                     context.getContentResolver().notifyChange(uri, null);
                 }
-
+                informUpdate();
                 return returnCount;
             default:
+                informUpdate();
                 return super.bulkInsert(uri, values);
         }
     }
+
 
 }

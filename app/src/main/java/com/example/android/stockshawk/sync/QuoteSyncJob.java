@@ -85,7 +85,6 @@ public final class QuoteSyncJob {
                 // This should be enough as to develop and review while the API is down
                 List<HistoricalQuote> history = MockUtils.getHistory();
 
-
                 StringBuilder historyBuilder = new StringBuilder();
 
                 for (HistoricalQuote it : history) {

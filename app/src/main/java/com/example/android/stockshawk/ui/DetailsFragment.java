@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.android.stockshawk.R;
+import com.example.android.stockshawk.mock.MockUtils;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -24,9 +25,7 @@ import java.util.List;
 
 import timber.log.Timber;
 import yahoofinance.Stock;
-import yahoofinance.YahooFinance;
 import yahoofinance.histquotes.HistoricalQuote;
-import yahoofinance.histquotes.Interval;
 
 public class DetailsFragment extends Fragment {
 
@@ -105,8 +104,15 @@ public class DetailsFragment extends Fragment {
             int counter = 0;
 
             try {
-                stock = YahooFinance.get(strings[0], true);
-                stockHistQuotes = stock.getHistory(from, to, Interval.DAILY);
+                //stock = YahooFinance.get(strings[0], true);
+                //stockHistQuotes = stock.getHistory(from, to, Interval.DAILY);
+
+                // Note for reviewer:
+                // Due to the problems with the Yahoo API we have commented the lines above
+                // and included this one to fetch the history from MockUtils
+                // This should be enough as to develop and review while the API is down
+                stockHistQuotes = MockUtils.getHistory();
+
                 for (HistoricalQuote quote : stockHistQuotes) {
                     Log.v("Quote: ", "close > " + quote.getClose().toString());
                     lineChartEntries.add(new Entry(counter, quote.getClose().floatValue()));

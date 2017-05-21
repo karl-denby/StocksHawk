@@ -5,12 +5,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.android.stockshawk.R;
+import com.example.android.stockshawk.mock.MockUtils;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -25,9 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 import yahoofinance.Stock;
-import yahoofinance.YahooFinance;
 import yahoofinance.histquotes.HistoricalQuote;
-import yahoofinance.histquotes.Interval;
 
 
 public class DetailActivity extends AppCompatActivity {
@@ -95,12 +93,20 @@ public class DetailActivity extends AppCompatActivity {
             int counter = 0;
 
             try {
-                stock = YahooFinance.get(strings[0], true);
-                stockHistQuotes = stock.getHistory(from, to, Interval.DAILY);
-                for (HistoricalQuote quote : stockHistQuotes) {
-                    Log.v("Quote: ", "close > " + quote.getClose().toString());
-                    lineChartEntries.add(new Entry(counter, quote.getClose().floatValue()));
-                    counter++;
+                //stock = YahooFinance.get(strings[0], true);
+                //stockHistQuotes = stock.getHistory(from, to, Interval.DAILY);
+
+                // Note for reviewer:
+                // Due to the problems with the Yahoo API we have commented the lines above
+                // and included this one to fetch the history from MockUtils
+                // This should be enough as to develop and review while the API is down
+                stockHistQuotes = MockUtils.getHistory();
+
+                if (stockHistQuotes!=null) {
+                    for (HistoricalQuote quote : stockHistQuotes) {
+                        lineChartEntries.add(new Entry(counter, quote.getClose().floatValue()));
+                        counter++;
+                    }
                 }
             } catch (IOException e) {
                 Timber.d(e.toString());
@@ -114,11 +120,14 @@ public class DetailActivity extends AppCompatActivity {
             tvStockName.setVisibility(View.VISIBLE);
             pbLoadingIndicator.setVisibility(View.GONE);
 
-            LineDataSet lineDataSet = new LineDataSet(data, "price");
-            lineDataSet.setColors(new int[] {R.color.material_blue_500}, getApplicationContext());
-            LineData lineData = new LineData(lineDataSet);
-            grpHistorical.setData(lineData);
-            grpHistorical.invalidate();  // refresh
+            if (data!=null) {
+                LineDataSet lineDataSet = new LineDataSet(data, "price");
+                lineDataSet.setColors(new int[]{R.color.material_blue_500}, getApplicationContext());
+                LineData lineData = new LineData(lineDataSet);
+                grpHistorical.setData(lineData);
+                grpHistorical.invalidate();  // refresh
+            }
+
         }
     } // StockDetailsAsyncTask
 
